@@ -1,7 +1,7 @@
 """Publish configurable velocity commands to turtlesim."""
 
-import rclpy
 from geometry_msgs.msg import Twist
+import rclpy
 from rclpy.node import Node
 
 
