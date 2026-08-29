@@ -1,234 +1,126 @@
 # Robotics Learning Journey
 
-用于记录机器人实验室项目学习过程，包括 ROS2、Gazebo 仿真、SLAM 建图、Nav2 自主导航以及机器人应用开发。
+A reproducible ROS 2 Humble learning workspace for turtlesim, TurtleBot3
+simulation, SLAM mapping, RViz, and Nav2 navigation.
 
----
-
-# ROS2 Learning Journey
+The repository combines small ROS 2 Python examples with experiment notes and
+configuration assets. Detailed procedures live in `docs/`; this README is the
+project entry point.
 
 ## Environment
 
 - Ubuntu 22.04
-- ROS2 Humble
+- ROS 2 Humble
 - Python 3.10
 - Gazebo
 - TurtleBot3 Burger
 
----
+## Learning progress
+
+- [x] ROS 2 nodes, topics, services, actions, and parameters
+- [x] Ament Python packages and `colcon` workspace management
+- [x] Publishers and subscribers with `rclpy`
+- [x] TurtleBot3 Gazebo simulation
+- [x] SLAM Toolbox mapping
+- [x] Map saving and reuse
+- [x] Nav2 startup and AMCL localization
+- [ ] Custom Gazebo world
+- [ ] Nav2 goal and multi-point navigation nodes
+- [ ] Camera and LiDAR perception
+- [ ] Object detection and sensor fusion
+
+## Repository structure
+
+```text
+robotics-learning/
+├── assets/
+│   ├── maps/
+│   └── rviz/
+├── docs/
+│   ├── navigation/
+│   ├── slam/
+│   └── troubleshooting/
+└── src/
+    └── my_robot_demo/
+        ├── launch/
+        ├── my_robot_demo/
+        ├── resource/
+        └── test/
+```
+
+## Quick start
+
+Clone the repository and install declared ROS dependencies:
+
+```bash
+git clone https://github.com/fenggezhou6667-sudo/robotics-learning.git
+cd robotics-learning
+
+source /opt/ros/humble/setup.bash
+rosdep install --from-paths src --ignore-src -r -y
+```
+
+Build and source the workspace:
+
+```bash
+colcon build --symlink-install
+source install/setup.bash
+```
+
+Launch turtlesim together with the publisher and pose subscriber:
+
+```bash
+ros2 launch my_robot_demo demo.launch.py
+```
+
+The movement node is configurable through ROS parameters:
+
+```bash
+ros2 run my_robot_demo move_turtle --ros-args \
+  -p linear_velocity:=1.0 \
+  -p angular_velocity:=0.5 \
+  -p publish_period:=0.5
+```
+
+Run the package tests:
+
+```bash
+colcon test --packages-select my_robot_demo
+colcon test-result --verbose
+```
+
+## TurtleBot3 assets
+
+Saved maps are in `assets/maps/`. RViz configurations are in
+`assets/rviz/`:
+
+- `custom-navigation.rviz`: the custom experiment configuration.
+- `turtlebot3-navigation.rviz`: the TurtleBot3 navigation configuration.
+
+Example Nav2 launch command from the repository root:
+
+```bash
+export TURTLEBOT3_MODEL=burger
+
+ros2 launch turtlebot3_navigation2 navigation2.launch.py \
+  map:="$(pwd)/assets/maps/my_map.yaml" \
+  use_sim_time:=True
+```
+
+## Documentation
+
+- [ROS 2 basics](docs/ros2-basics.md)
+- [TurtleBot3 SLAM](docs/slam/turtlebot3-slam.md)
+- [SLAM command reference](docs/slam/commands.md)
+- [TurtleBot3 navigation](docs/navigation/turtlebot3-navigation.md)
+- [Nav2 troubleshooting](docs/troubleshooting/nav2.md)
+- [RViz configurations](docs/rviz-configurations.md)
+
+## Next steps
 
-# Stage 1: ROS2 Basics
+Future work is tracked in the learning checklist above. Larger tasks can be
+moved into GitHub Issues as the project grows.
 
-Completed:
+## License
 
-- Node
-- Topic
-- Service
-- Action
-- Parameter
-
-Learned basic ROS2 communication mechanisms and system architecture.
-
----
-
-# Stage 2: ROS2 Engineering
-
-Completed:
-
-- Create ROS2 package
-- colcon build
-- Launch file
-- Workspace management
-
-Package:
-
-my_robot_demo
-
----
-
-# Stage 3: rclpy Programming
-
-Implemented ROS2 Python nodes.
-
-## move_turtle.py
-
-A ROS2 publisher node controlling robot velocity.
-
-Topic:
-
-/turtle1/cmd_vel
-
-Functions:
-
-- Publish velocity commands
-- Control robot movement
-
-
-## turtle_pose.py
-
-A ROS2 subscriber node receiving robot pose information.
-
-Topic:
-
-/turtle1/pose
-
-Functions:
-
-- Subscribe robot state
-- Process position information
-
-
----
-
-# Stage 4: Gazebo Simulation
-
-Completed:
-
-- TurtleBot3 simulation environment setup
-- ROS2 and Gazebo communication
-- Robot model loading
-- Sensor data verification
-
-Platform:
-
-TurtleBot3 Burger
-
-Verified:
-
-- Differential drive control
-- Laser scan data
-- TF coordinate transformation
-
----
-
-# Stage 5: SLAM Mapping
-
-Completed:
-
-- SLAM Toolbox configuration
-- Environment exploration
-- 2D occupancy grid map generation
-- Map saving
-
-Generated map files:
-
-maps/
-├── my_map.yaml
-└── my_map.pgm
-
-The generated map can be reused for autonomous navigation.
-
----
-
-# Stage 6: Nav2 Autonomous Navigation
-
-Completed:
-
-- Load saved map using map_server
-- Configure Navigation2 stack
-- AMCL localization
-- TF transformation verification
-
-Main components:
-
-map_server
-amcl
-planner_server
-controller_server
-global_costmap
-local_costmap
-
-Verified:
-
-- Map loading
-- Robot localization
-- Navigation framework startup
-
-
----
-
-# Debugging Notes
-
-During the Nav2 deployment process, several issues were solved:
-
-## 1. Missing map frame
-
-Problem:
-
-Invalid frame ID "map"
-
-Solution:
-
-- Check map_server lifecycle state
-- Verify /map topic publishing
-
-
-## 2. AMCL localization failure
-
-Problem:
-
-AMCL cannot publish a pose
-
-Solution:
-
-- Set initial pose in RViz
-- Check TF relationship
-
-
-## 3. RViz configuration compatibility
-
-Problem:
-
-- Different Nav2 versions caused RViz plugin loading errors
-
-Solution:
-
-- Use compatible TurtleBot3 Navigation2 RViz configuration
-
-
----
-
-# Repository Structure
-
-robotics-learning
-├── README.md
-│
-├── maps
-│   ├── my_map.yaml
-│   └── my_map.pgm
-│
-├── notes
-│   └── ros2_navigation.md
-│
-├── rviz
-│   └── README.md
-│
-└── screenshots
-    ├── slam_result.png
-    └── navigation_result.png
-
----
-
-# Future Plan
-
-## Autonomous Navigation
-
-- Complete custom Gazebo world
-- Implement Nav2 goal navigation
-- Develop multi-point navigation node using rclpy
-- Learn ROS2 Action interface
-
-
-## Robot Perception
-
-- Camera perception
-- LiDAR processing
-- Object detection
-- Sensor fusion
-
-
-## Advanced Robotics
-
-- Robot control
-- Autonomous systems
-- Embodied intelligence
-- Multi-modal perception
+This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE).

@@ -2,10 +2,16 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>my_robot_demo</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="qingzhou@todo.todo">qingzhou</maintainer>
-  <license>TODO: License declaration</license>
+  <version>0.1.0</version>
+  <description>ROS 2 Python examples for learning turtlesim publishers, subscribers, and launch files.</description>
+  <maintainer email="fenggezhou6667@gmail.com">qingzhou</maintainer>
+  <license>Apache-2.0</license>
+
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>turtlesim</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
